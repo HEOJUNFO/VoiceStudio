@@ -3,12 +3,14 @@
 All notable changes to VoiceStudio.
 
 The format is loosely based on [Keep a Changelog](https://keepachangelog.com/).
-`frontend/package.json` is the maintained app-version source of truth; Python
-metadata and the backend fallback mirror it. Archived Tauri manifests stay frozen.
+`package.json` is the maintained app-version source of truth; Electron package
+metadata and the backend fallback mirror it.
 
 ## [Unreleased]
 
 **Highlights**
+- Electron is now the only desktop and web UI; the retired Tauri shell and legacy entry points are removed (#2343)
+- Docker and browser deployments now use the same maintained interface as the Electron desktop app (#2341)
 - Manage Projects with confirmed individual and bulk deletion, retry failed items, and keep exported files and render audio (#2333)
 - Twilio setup is a guided checklist with live status and exact commands (#2304)
 - Integration pages use the full window, with a side panel on wide screens (#2304)
@@ -33,6 +35,15 @@ metadata and the backend fallback mirror it. Archived Tauri manifests stay froze
 
 ### Changed
 
+- OmniVoice sidecars reuse installed speech recognition for short references without transcripts, matching in-process cloning (#2320)
+- Electron recovers from OS-denied default backend ports without changing explicitly configured ports (#2358) — thanks @rishi2288!
+- Home opens directly on project actions, and Integrations lists only connectors with completed in-app setup (#2351)
+- Multi-GPU NVIDIA hosts can choose which physical CUDA adapter VoiceStudio and its engine subprocesses use (#2346) — thanks @z0tedd!
+- MCP clients on another machine can connect through PIN-gated Local network sharing, which admits LAN hosts only while sharing is enabled (#2347) — thanks @z0tedd!
+- Docker, web setup, and documentation now use the canonical `ghcr.io/debpalash/voicestudio` image while the old GHCR path remains compatible (#2350)
+- GHCR publishes the VoiceStudio container coordinate alongside the existing path, with a release-tag backfill for a safe migration (#2348)
+- Electron is now the only desktop and web UI, with native helpers, packaging, setup, Docker and Network Sharing owned by maintained Electron paths (#2343)
+- Docker, `build:web`, and `dev:web` now build the maintained Electron renderer instead of the archived browser interface (#2341)
 - Twilio setup is a guided checklist: account, tunnel, phone number and voice steps with live status, exact tunnel commands for your OS and gateway port, copyable webhook URL, a readiness panel and clear reasons when an action is unavailable (#2304)
 - Integration pages use the full window: setup beside a side panel with status, capabilities and website on wide screens, stacked on narrow ones, with the scrollbar at the window edge (#2304)
 - Footer sponsor hover details show dated GitHub reach, and its X opens the Pro page (#2302)
@@ -47,6 +58,14 @@ metadata and the backend fallback mirror it. Archived Tauri manifests stay froze
 ### Fixed
 
 - The Enter that confirms Korean, Japanese or Chinese input no longer also submits project renames, language search, pronunciation, worker or MCP fields (#2338) — thanks @HEOJUNFO!
+- macOS development launches use the maintained Electron version and icon paths (#2351)
+- Electron detects and repairs incomplete PyTorch, torchaudio and torchvision runtime wheels before backend startup (#2354) — thanks @jonathanmoronta1-lab!
+- Returning to local mode discards sessions from unsaved remote-backend connection tests (#2356)
+- Remote administrator sessions survive reloads and new tabs without storing the master API key (#2352) — thanks @brunobarrientos!
+- Dub extraction shows ffmpeg's actual error instead of its Homebrew version banner (#2353) — thanks @lyrenth!
+- Main-source installs use the built app version even when platform tooling has its own `Version` variable (#2343)
+- The macOS application menu says VoiceStudio instead of Electron in development launches (#2342)
+- Engine health checks recognize one-click TTS engines such as VoxCPM2 and MOSS-TTS-Nano in their isolated environments (#2339)
 - Privacy controls stay expanded during first-run installation instead of hiding behind Advanced (#2337)
 - Preserve large workflow libraries and keyboard moves, secure library deletion and license storage, and keep analytics opt-out authoritative during startup (#2333)
 
